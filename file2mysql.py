@@ -18,7 +18,7 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','nishiiilu','pathology')
+  con=MySQLdb.connect('127.0.0.1','root','xyz','pathology')
   #print(con)
   if(con==None):
     print("Can't connect to database")
