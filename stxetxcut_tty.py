@@ -5,7 +5,7 @@ import datetime
 import serial 
 
 #Globals for debug, debug=1#########
-debug=0
+debug=1
 
 #Globals for configuration##########
 output_folder='/root/inbox/' #remember ending/
