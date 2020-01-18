@@ -8,8 +8,8 @@ import serial
 debug=1
 
 #Globals for configuration##########
-output_folder='/root/inbox2/' #remember ending/
-input_tty='/dev/ttyS2'
+output_folder='/root/inbox1/' #remember ending/
+input_tty='/dev/ttyS1'
 alarm_time=10
 
 #functions##########################

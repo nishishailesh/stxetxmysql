@@ -18,7 +18,7 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','root','clinical_lab')
+  con=MySQLdb.connect('127.0.0.1','root','root','cl_general')
   #print(con)
   if(con==None):
     print("Can't connect to database")
@@ -80,8 +80,8 @@ class micros(object):
   abx_result={}
   current_file=''
 #Globals for configuration################
-  inbox='/root/inbox/'
-  archived='/root/archived/'
+  inbox='/root/inbox1/'
+  archived='/root/archived1/'
   
   def get_first_file(self):
     inbox_files=os.listdir(self.inbox)
