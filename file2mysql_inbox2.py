@@ -18,7 +18,7 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','root','cl_general')
+  con=MySQLdb.connect('127.0.0.1','root','LISopibttobFS','cl_general')
   #print(con)
   if(con==None):
     print("Can't connect to database")
@@ -112,8 +112,8 @@ class micros(object):
         if(multiplication_factor>0):
           db_result=round(float(db_result)*multiplication_factor)
         else:
-          db_result= db_result      
-          
+          db_result= db_result
+
         self.abx_result[db_code]=db_result
         
   def send_to_mysql(self):
