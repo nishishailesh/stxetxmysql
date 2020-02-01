@@ -18,7 +18,7 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','LISopibttobFS','cl_general')
+  con=MySQLdb.connect('127.0.0.1','root','nishiiilu','cl_general')
   #print(con)
   if(con==None):
     print("Can't connect to database")
@@ -117,6 +117,10 @@ class micros(object):
         self.abx_result[db_code]=db_result
         
   def send_to_mysql(self):
+    print('sample_id='+self.abx_result[30].rstrip(' '));
+    if(self.abx_result[30].rstrip(' ').isnumeric() == False):
+      print('sample_id is not number')
+      return False;
     for key in self.abx_result.keys():
       sql='insert into primary_result (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
       data_tpl=(self.abx_result[30].rstrip(' '),key,self.abx_result[key],self.abx_result[26],self.abx_result[key])
