@@ -122,7 +122,11 @@ class micros(object):
       print('sample_id is not number')
       return False;
     for key in self.abx_result.keys():
-      sql='insert into primary_result (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
+      if(key in [19,20,21]):
+        print(key)		
+        sql='insert into primary_result_blob (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
+      else:
+        sql='insert into primary_result (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
       data_tpl=(self.abx_result[30].rstrip(' '),key,self.abx_result[key],self.abx_result[26],self.abx_result[key])
       run_query(sql,data_tpl)
       

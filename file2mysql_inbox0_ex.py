@@ -80,8 +80,8 @@ class micros(object):
   abx_result={}
   current_file=''
 #Globals for configuration################
-  inbox='/root/inbox2/'
-  archived='/root/archived2/'
+  inbox='/root/inbox0/'
+  archived='/root/archived0/'
   
   def get_first_file(self):
     inbox_files=os.listdir(self.inbox)
@@ -127,6 +127,7 @@ class micros(object):
         sql='insert into primary_result_blob (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
       else:
         sql='insert into primary_result (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
+        
       data_tpl=(self.abx_result[30].rstrip(' '),key,self.abx_result[key],self.abx_result[26],self.abx_result[key])
       run_query(sql,data_tpl)
       
@@ -144,4 +145,3 @@ if __name__=='__main__':
       m.send_to_mysql()
       m.archive_file()
     time.sleep(1)
-  
