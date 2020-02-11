@@ -1,6 +1,14 @@
+#!/bin/bash
 inotifywait -m /root/inbox* -e create -e moved_from |
-#inotifywait -m /path -e create -e moved_to |
     while read path action file; do
-        echo "The file '$file' appeared in directory '$path' via '$action'"
+	if [ "$action" == 'CREATE' ]
+	then
+		echo "+++Result received at '$file' and stored in '$path"
+	fi
+        if [ "$action" = 'MOVED_FROM' ]
+        then
+		echo -e "---Its Result is stored in LIS\n"
+        fi
+
         # do something with the file
     done
