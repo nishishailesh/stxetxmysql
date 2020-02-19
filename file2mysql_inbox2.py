@@ -18,7 +18,7 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','LISopibttobFS','cl_general')
+  con=MySQLdb.connect('127.0.0.1','root','nishiiilu','cl_general')
   #print(con)
   if(con==None):
     print("Can't connect to database")
@@ -77,12 +77,15 @@ class micros(object):
      }
 
   
-  abx_result={}
-  current_file=''
+  #abx_result={}
+  #current_file=''
 #Globals for configuration################
   inbox='/root/inbox2/'
   archived='/root/archived2/'
-  
+
+  def __init__(self):
+    self.abx_result={}
+    self.current_file=''    
   def get_first_file(self):
     inbox_files=os.listdir(self.inbox)
     for each_file in inbox_files:
@@ -117,7 +120,7 @@ class micros(object):
         self.abx_result[db_code]=db_result
         
   def send_to_mysql(self):
-    print('sample_id='+self.abx_result[30].rstrip(' '));
+    #print('sample_id='+self.abx_result[30].rstrip(' '));
     if(self.abx_result[30].rstrip(' ').isnumeric() == False):
       print('sample_id is not number')
       return False;
@@ -137,11 +140,13 @@ class micros(object):
 #Main Code###############################
 if __name__=='__main__':
   #print('__name__ is ',__name__,',so running code')
-  m=micros()
   while True:
+    m=micros()
+    print(m.abx_result)
     if(m.get_first_file()):
       m.get_abx_result()
       m.send_to_mysql()
       m.archive_file()
+    print(m.abx_result)
     time.sleep(1)
   
