@@ -3,7 +3,15 @@ import os
 import MySQLdb
 import time
 
-#functions################################
+#Globals for configuration################
+
+my_host='127.0.0.1'
+my_user='root'
+my_pass='root'
+my_db='cl_general'
+
+inbox='/root/inbox2/'
+archived='/root/archived2/'
 
 ##########MYSQL##
 def show_results():
@@ -18,7 +26,8 @@ def show_results():
       print(row)
 
 def run_query(prepared_sql,data_tpl):
-  con=MySQLdb.connect('127.0.0.1','root','nishiiilu','cl_general')
+  #con=MySQLdb.connect('127.0.0.1','root','nishiiilu','cl_general')
+  con=MySQLdb.connect(my_host,my_user,my_pass,my_db)
   #print(con)
   if(con==None):
     print("Can't connect to database")
@@ -35,6 +44,8 @@ def get_single_row(cur):
 
 #classes#################################
 class micros(object):
+  #inbox='/root/inbox2/'
+  #archived='/root/archived2/'
   abx={
 	"\xff":(22,0,0), #"RecordType"],0,0),
 	"p":(23,0,0), #"AnalyserNumber"],0,0),
@@ -77,13 +88,11 @@ class micros(object):
      }
 
   
-  #abx_result={}
-  #current_file=''
-#Globals for configuration################
-  inbox='/root/inbox2/'
-  archived='/root/archived2/'
 
-  def __init__(self):
+
+  def __init__(self,inbox_folder,archived_folder):
+    self.inbox=inbox_folder
+    self.archived=archived_folder
     self.abx_result={}
     self.current_file=''    
   def get_first_file(self):
@@ -120,10 +129,16 @@ class micros(object):
         self.abx_result[db_code]=db_result
         
   def send_to_mysql(self):
-    #print('sample_id='+self.abx_result[30].rstrip(' '));
+    if(30 in self.abx_result and 26 in self.abx_result):
+      print('sample_id='+self.abx_result[30].rstrip(' '));
+    else:
+      print('\033[0;31msample_id / datetime not found. not ABX? is it ARGOS?\033[0m')
+      return False;
+
     if(self.abx_result[30].rstrip(' ').isnumeric() == False):
       print('sample_id is not number')
       return False;
+
     for key in self.abx_result.keys():
       if(key in [19,20,21]):
         print(key)		
@@ -141,12 +156,12 @@ class micros(object):
 if __name__=='__main__':
   #print('__name__ is ',__name__,',so running code')
   while True:
-    m=micros()
-    print(m.abx_result)
+    m=micros(inbox,archived)
+    #print(m.abx_result)
     if(m.get_first_file()):
       m.get_abx_result()
       m.send_to_mysql()
       m.archive_file()
-    print(m.abx_result)
+    #print(m.abx_result)
     time.sleep(1)
   
