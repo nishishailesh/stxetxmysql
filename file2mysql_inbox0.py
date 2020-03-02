@@ -2,12 +2,14 @@
 import os
 import MySQLdb
 import time
+import logging
 
 #Globals for configuration################
+debug=1
 
 my_host='127.0.0.1'
 my_user='root'
-my_pass='root'
+my_pass='LISopibttobFS'
 my_db='cl_general'
 
 inbox='/root/inbox0/'
@@ -28,9 +30,9 @@ def show_results():
 def run_query(prepared_sql,data_tpl):
   #con=MySQLdb.connect('127.0.0.1','root','nishiiilu','cl_general')
   con=MySQLdb.connect(my_host,my_user,my_pass,my_db)
-  #print(con)
+  if(debug==1): print(con)
   if(con==None):
-    print("Can't connect to database")
+     if(debug==1): print("Can't connect to database")
   else:
     pass
     #print('connected')
@@ -130,18 +132,20 @@ class micros(object):
         
   def send_to_mysql(self):
     if(30 in self.abx_result and 26 in self.abx_result):
-      print('sample_id='+self.abx_result[30].rstrip(' '));
+      if(debug==1):print('sample_id='+self.abx_result[30].rstrip(' '));
     else:
-      print('\033[0;31msample_id / datetime not found. not ABX? is it ARGOS?\033[0m')
+      if(debug==1):print('\033[0;31msample_id / datetime not found. not ABX? is it ARGOS?\033[0m')
+      logging.debug('\033[0;31msample_id / datetime not found. not ABX? is it ARGOS?\033[0m')
       return False;
 
     if(self.abx_result[30].rstrip(' ').isnumeric() == False):
-      print('sample_id is not number')
+      if(debug==1):print('\033[0;31msample_id is not number\033[0m')
+      logging.debug('\033[0;31msample_id is not number\033[0m')
       return False;
 
     for key in self.abx_result.keys():
       if(key in [19,20,21]):
-        print(key)		
+        if(debug==1):print(key)		
         sql='insert into primary_result_blob (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
       else:
         sql='insert into primary_result (sample_id,examination_id,result,uniq) values (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE result=%s'
@@ -150,18 +154,25 @@ class micros(object):
       
   def archive_file(self):
     os.rename(self.inbox+self.current_file,self.archived+self.current_file)
+    if(30 in self.abx_result):
+      sid='Sample_ID:'+self.abx_result[30].rstrip(' ')
+    else:
+      sid='Sample_ID can not be found in file but,'
+    logging.debug('--- '+sid+' Data moved to '+str(self.archived+self.current_file))
     current_file='';
+
+logging.basicConfig(filename='/root/micros.log',level=logging.DEBUG)
       
 #Main Code###############################
 if __name__=='__main__':
   #print('__name__ is ',__name__,',so running code')
   while True:
     m=micros(inbox,archived)
-    #print(m.abx_result)
+    if(debug==1): print(m.abx_result)
     if(m.get_first_file()):
       m.get_abx_result()
       m.send_to_mysql()
       m.archive_file()
-    #print(m.abx_result)
+    if(debug==1):print(m.abx_result)
     time.sleep(1)
   

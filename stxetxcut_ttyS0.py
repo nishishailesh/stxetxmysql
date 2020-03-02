@@ -3,22 +3,29 @@ import sys
 import signal
 import datetime
 import serial 
-
+import logging
 #Globals for debug, debug=1#########
-debug=1
-
+debug=0
+logging.basicConfig(filename='/root/micros.log',level=logging.DEBUG)
+#logging.debug("hiii");
 #Globals for configuration##########
 output_folder='/root/inbox0/' #remember ending/
 input_tty='/dev/ttyS0'
+
+#For testing
+#socat -d -d - pty,raw,echo=0
+#input_tty='/dev/pts/1'
 alarm_time=10
 
 #functions##########################
 def signal_handler(signal, frame):
   if(debug==1): print ('Your alarm is over\nsignal=',signal,'\nframe=',frame,'\n')
   if(debug==1): print(byte_array)
-  x=open(get_filename(),'w')
+  target_file=get_filename()
+  x=open(target_file,'w')
   x.write(''.join(byte_array))
   x.close()
+  logging.debug('Data(alarmed) received at '+str(target_file))
 
 def get_filename():
   dt=datetime.datetime.now()
@@ -44,6 +51,7 @@ while byte!=b'':
     x=open(get_filename(),'w')
     x.write(''.join(byte_array))
     x.close()
+    logging.debug('Data received at '+str(filename))
   elif(byte==b'\x02'):
     if(debug==1): print("<STX> received\n")
     byte_array=[]
