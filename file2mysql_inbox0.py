@@ -9,7 +9,7 @@ debug=0
 
 my_host='127.0.0.1'
 my_user='root'
-my_pass='nishiiilu'
+my_pass=''
 my_db='cl_general'
 
 inbox='/root/inbox0/'
