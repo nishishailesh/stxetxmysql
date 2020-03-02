@@ -5,11 +5,11 @@ import time
 import logging
 
 #Globals for configuration################
-debug=1
+debug=0
 
 my_host='127.0.0.1'
 my_user='root'
-my_pass='LISopibttobFS'
+my_pass='nishiiilu'
 my_db='cl_general'
 
 inbox='/root/inbox0/'
@@ -111,10 +111,22 @@ class micros(object):
       data=fh.readline().rstrip('\n')
       if data=='':
         break
+        
       token=data.split(' ',1)
-      analyser_code=token[0]
+      
+      try:
+        analyser_code=token[0]
+      except Exception as analyser_code_error:
+        logging.debug(analyser_code_error)
+        continue
+        
       if(analyser_code in self.abx):
-        analyser_result=token[1]
+        try:
+          analyser_result=token[1]
+        except Exception as analyser_code_error:
+          logging.debug(analyser_code_error)
+          continue
+        
         db_code=self.abx[analyser_code][0]
         field_size=self.abx[analyser_code][1]
         multiplication_factor=self.abx[analyser_code][2]
@@ -124,10 +136,14 @@ class micros(object):
           db_result=analyser_result
 
         if(multiplication_factor>0):
-          db_result=round(float(db_result)*multiplication_factor)
+          try:			
+            db_result=round(float(db_result)*multiplication_factor)
+          except Exception as my_ex:
+            logging.debug(my_ex)
+            logging.debug('\033[0;31mresult of ('+analyser_code+') can not be converted to float for multiplication?\033[0m')
+            continue			  
         else:
           db_result= db_result
-
         self.abx_result[db_code]=db_result
         
   def send_to_mysql(self):
