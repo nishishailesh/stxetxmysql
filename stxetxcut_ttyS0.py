@@ -14,7 +14,7 @@ input_tty='/dev/ttyS0'
 
 #For testing
 #socat -d -d - pty,raw,echo=0
-#input_tty='/dev/pts/1'
+#input_tty='/dev/pts/2'
 alarm_time=10
 
 #functions##########################
@@ -48,7 +48,8 @@ while byte!=b'':
     if(debug==1): print(byte_array)
     signal.alarm(0)
     if(debug==1): print("Alarm Cancelled\n")
-    x=open(get_filename(),'w')
+    target_file=get_filename()
+    x=open(target_file,'w')
     x.write(''.join(byte_array))
     x.close()
     logging.debug('Data received at '+str(filename))
